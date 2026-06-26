@@ -24,11 +24,12 @@ data/processed/
 *.pkl
 *.joblib
 
-# Outputs
+# Outputs — charts regenerable, slide deck committed for portfolio
 outputs/charts/*.png
 outputs/charts/*.pdf
 outputs/charts/*.svg
-outputs/*.html
+outputs/tables/*.csv
+# Note: outputs/slide_deck.html IS committed — it's the main deliverable artifact
 
 # IDE
 .vscode/
