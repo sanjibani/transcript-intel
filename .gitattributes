@@ -1,0 +1,2 @@
+# git-crypt config — INTERVIEW_PREP.md is encrypted for the user's eyes only
+INTERVIEW_PREP.md filter=git-crypt diff=git-crypt merge=git-crypt

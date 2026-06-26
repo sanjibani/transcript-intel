@@ -42,5 +42,5 @@ outputs/*.html
 .env.local
 *.pem
 
-# Interview prep notes — private to the user, never push
-INTERVIEW_PREP.md
+# NOTE: INTERVIEW_PREP.md is now encrypted via git-crypt (see .gitattributes).
+# The encrypted version lives in the repo; only your GPG key decrypts it locally.
