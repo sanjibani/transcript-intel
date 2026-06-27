@@ -41,6 +41,8 @@ outputs/tables/*.csv
 # Secrets
 .env
 .env.local
+.env.bak
+.env.save
 *.pem
 
 # NOTE: INTERVIEW_PREP.md is now encrypted via git-crypt (see .gitattributes).
