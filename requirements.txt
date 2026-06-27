@@ -19,6 +19,10 @@ pyarrow>=12.0
 openai>=1.0
 tiktoken>=0.4
 
+# pydantic-core pin — openai 2.43.0 + Python 3.14 requires pydantic-core 2.41.5
+# Newer 2.46+ breaks openai's import chain. Don't bump this without testing.
+pydantic-core==2.41.5
+
 # Notebook
 jupyter>=1.0
 ipykernel>=6.0
