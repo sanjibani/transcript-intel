@@ -6,10 +6,19 @@ What this does:
     OpenAI-compatible chat completion API. Defaults to MiniMax but works
     with any OpenAI-compatible endpoint via env vars.
 
-Configuration via env vars:
+Configuration via env vars (loaded from .env file if present):
     LLM_BASE_URL  - API endpoint (default: https://api.minimax.chat/v1)
     LLM_API_KEY   - your API key (REQUIRED)
     LLM_MODEL     - model name (default: MiniMax-Text-01)
+
+Setup:
+    1. Copy .env.example to .env:   cp .env.example .env
+    2. Edit .env and put your real API key there
+    3. Run the pipeline — it will read from .env automatically
+
+Safety:
+    .env is gitignored. NEVER commit it. The pipeline will refuse to log
+    the API key even if the env var is set.
 
 Graceful degradation:
     If LLM_API_KEY is not set, llm_call() returns None and logs a warning.
@@ -26,9 +35,28 @@ from __future__ import annotations
 import logging
 import os
 import sys
+from pathlib import Path
 from typing import Optional
 
+# Load .env file if it exists (silently skip if not)
+try:
+    from dotenv import load_dotenv
+    _env_path = Path(__file__).resolve().parent.parent / ".env"
+    if _env_path.exists():
+        load_dotenv(_env_path, override=False)  # don't override existing env vars
+except ImportError:
+    pass  # python-dotenv not installed; rely on real env vars
+
 logger = logging.getLogger(__name__)
+
+# Safety: never log the actual API key, even in debug mode
+def _safe_key_for_log() -> str:
+    key = os.environ.get("LLM_API_KEY") or os.environ.get("OPENAI_API_KEY") or os.environ.get("MINIMAX_API_KEY")
+    if not key:
+        return "<not set>"
+    if len(key) < 8:
+        return "<too short to log>"
+    return f"{key[:4]}...{key[-4:]}  ({len(key)} chars)"
 
 
 def _get_client():
@@ -47,6 +75,7 @@ def _get_client():
         return None
 
     base_url = os.environ.get("LLM_BASE_URL", "https://api.minimax.chat/v1")
+    logger.debug(f"LLM client: base_url={base_url}, model={os.environ.get('LLM_MODEL', 'MiniMax-Text-01')}, key={_safe_key_for_log()}")
     return OpenAI(api_key=api_key, base_url=base_url)
 
 
@@ -96,10 +125,13 @@ def llm_available() -> bool:
 
 if __name__ == "__main__":
     # Quick smoke test
+    print(f"LLM key status: {_safe_key_for_log()}")
+    print(f"LLM base URL:   {os.environ.get('LLM_BASE_URL', 'https://api.minimax.chat/v1')}")
+    print(f"LLM model:      {os.environ.get('LLM_MODEL', 'MiniMax-Text-01')}")
     if llm_available():
         result = llm_call("Reply with just the word 'OK' and nothing else.")
-        print(f"LLM response: {result!r}")
+        print(f"\nLLM response: {result!r}")
     else:
-        print("LLM not configured. Set LLM_API_KEY env var to enable.")
-        print("(See INTERVIEW_PREP.md for setup instructions.)")
+        print("\nLLM not configured.")
+        print("Setup: cp .env.example .env, then edit .env with your real key.")
         sys.exit(0)
