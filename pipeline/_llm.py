@@ -74,7 +74,7 @@ def _get_client():
         logger.warning("openai library not installed; LLM calls unavailable")
         return None
 
-    base_url = os.environ.get("LLM_BASE_URL", "https://api.minimax.chat/v1")
+    base_url = os.environ.get("LLM_BASE_URL", "https://api.minimax.io/v1")
     logger.debug(f"LLM client: base_url={base_url}, model={os.environ.get('LLM_MODEL', 'MiniMax-Text-01')}, key={_safe_key_for_log()}")
     return OpenAI(api_key=api_key, base_url=base_url)
 
@@ -126,7 +126,7 @@ def llm_available() -> bool:
 if __name__ == "__main__":
     # Quick smoke test
     print(f"LLM key status: {_safe_key_for_log()}")
-    print(f"LLM base URL:   {os.environ.get('LLM_BASE_URL', 'https://api.minimax.chat/v1')}")
+    print(f"LLM base URL:   {os.environ.get('LLM_BASE_URL', 'https://api.minimax.io/v1')}")
     print(f"LLM model:      {os.environ.get('LLM_MODEL', 'MiniMax-Text-01')}")
     if llm_available():
         result = llm_call("Reply with just the word 'OK' and nothing else.")
