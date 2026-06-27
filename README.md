@@ -53,18 +53,18 @@ python3 scripts/build_slide_deck.py
 open outputs/slide_deck.html
 ```
 
-## Validation
+## What we extract vs. what we use as input
 
-The dataset includes pre-computed `keyMoments` in `summary.json`. We treat these as **reference labels**, not ground truth.
+We're explicit about which signals we extract from text and which we use as input from the pre-computed labels.
 
-| Metric | Our extraction | Pre-computed | Agreement |
-|---|---|---|---|
-| Calls with churn_signal | 59 | 61 | 52 both agree · 7 we found more · 0 we missed |
-| Feature gaps | 51 (36 customer + 15 internal) | 51 | 100% recall, 5 convergent topics identified |
-| Competitor mentions | 98 across 30 calls | n/a | New signal — not in pre-computed |
-| Comms-gap phrases | 57 across 38 calls | n/a | New signal — not in pre-computed |
+| Signal | Source | What we did |
+|---|---|---|
+| Competitor mentions | Transcript text | Regex extraction (98 mentions, 30 calls) |
+| Comms-gap phrases | Transcript text | Regex (57) + selective LLM (15) = 72 phrases, 53 calls |
+| Churn signals | Pre-computed `keyMoments` | Used as input features for risk scoring; tagged with `caller_side` |
+| Feature gaps | Pre-computed `keyMoments` | Used as input features; tagged with `caller_side` for cross-side analysis |
 
-**100% recall + 14% precision uplift + 2 new signal classes.**
+The architecture supports a real extraction layer for churn signals and feature gaps (regex + LLM, same as the comms-gap stage). For this 100-transcript assignment we used the pre-computed labels to keep scope tight. The "what we'd build next" slide covers the upgrade path.
 
 ## Project layout
 
@@ -109,10 +109,15 @@ Plus: full audit trail for every signal, deterministic outputs for non-LLM stage
 The pipeline runs without an LLM by default (regex rules catch most signals). To enable LLM validation in Stages 3-4:
 
 ```bash
-export LLM_BASE_URL="https://api.minimax.chat/v1"   # default
-export LLM_API_KEY="<your-minimax-key>"              # required
-export LLM_MODEL="MiniMax-Text-01"                  # default
+# Edit .env with your real MiniMax API key
+cp .env.example .env
+nano .env   # paste your LLM_API_KEY
 ```
+
+The defaults in `.env.example`:
+- `LLM_BASE_URL=https://api.minimax.io/v1`  ← correct endpoint for MiniMax Mavis
+- `LLM_MODEL=MiniMax-Text-01`
+- `LLM_API_KEY=<your-key-here>`  ← replace with real key
 
 Then re-run `python3 pipeline/03_extract.py` — LLM will fire only on calls where regex missed but sentiment suggests a gap (typically 5-15 calls).
 

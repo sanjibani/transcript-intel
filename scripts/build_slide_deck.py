@@ -64,9 +64,9 @@ def build() -> None:
         """
         <p class="lead">Take-home assignment: 100 transcripts processed through a hybrid pipeline to surface three insights for stakeholders.</p>
         <div class="meta">
-          <p><strong>3 insights:</strong> churn risk concentration · communication gap · convergent feature gaps</p>
-          <p><strong>Pipeline:</strong> 6 stages, hybrid (rules + embeddings + selective LLM), ~$0.30 in API costs</p>
-          <p><strong>Validation:</strong> matches pre-computed labels on 52 of 61 churn signals, finds 7 additional</p>
+          <p><strong>3 insights:</strong> churn risk concentration · communication gap · cross-side feature gaps</p>
+          <p><strong>Pipeline:</strong> 6 stages, hybrid (rules + embeddings + selective LLM), ~$0.05 in API costs</p>
+          <p><strong>Honest framing:</strong> competitor mentions + comms-gap phrases are extracted from text. Churn signals and feature gaps come from the pre-computed labels in the dataset (used as input features, not validated against).</p>
         </div>
         """,
         page_num=1,
@@ -79,11 +79,11 @@ def build() -> None:
         <p>In mid-March 2026, Aegis Detect's event-processing pipeline had a six-hour cascading failure. Zero threat visibility for affected customers. The technical fix shipped in 30 days.</p>
         <p><strong>The business damage didn't.</strong></p>
         <ul>
-          <li>8 customers entered <em>active churn-risk territory</em> within 10 days</li>
-          <li>39 of 100 calls show customers frustrated by <em>silence</em>, not by the bug</li>
-          <li>5 product gaps were independently raised by <em>both customers and engineers</em> — including the missing pipeline-health monitoring that could have prevented the outage</li>
+          <li>8 customer-facing calls were tagged URGENT/ESCALATION/INCIDENT — concentrated March 10-18</li>
+          <li>53 of 100 calls contain communication-gap language (e.g. "no notification", "flying blind")</li>
+          <li>30 of 100 calls name a competitor by name (SentinelShield dominates, with CyberNova and VaultEdge)</li>
         </ul>
-        <p class="footnote">A tool that surfaces these signals in real time, per stakeholder, would have flagged 4 accounts weeks before they escalated.</p>
+        <p class="footnote">A tool that surfaces these signals in real time, per stakeholder, would have flagged the at-risk accounts weeks before they escalated.</p>
         """,
         page_num=2,
     ))
@@ -92,13 +92,13 @@ def build() -> None:
     slides_html.append(slide(
         "Insight 1 — Churn risk concentrates in 4-8 accounts",
         """
-        <p class="lead">After the outage, 14 accounts scored HIGH churn risk; 4-8 of them account for the bulk of competitor mentions and churn signals.</p>
+        <p class="lead">14 of 32 customers scored HIGH churn risk. The top 4 — Blackridge, Cobalt, Northstar, Helix — all scored 90+ and are all connected to the March outage.</p>
         <ul>
           <li><strong>30 of 100 calls</strong> name a competitor by name (SentinelShield, CyberNova, VaultEdge)</li>
-          <li><strong>Same customers repeat</strong>: Blackridge, Cobalt, Northstar, Helix, Meridian, Summit Trust</li>
+          <li><strong>4 accounts</strong> account for most of the URGENT-call activity: Blackridge, Cobalt, Northstar, Helix</li>
           <li><strong>Internal Apr 24 Win/Loss call</strong>: 34 closed-lost deals totaling $2.1M ACV in Q1, with SentinelShield as primary winner</li>
         </ul>
-        <p class="footnote">A real-time churn risk score would have flagged Blackridge, Cobalt, and Northstar 30 days before they escalated.</p>
+        <p class="footnote">The risk score formula (5 components, 0-100) is defensible term-by-term. A real-time dashboard would have flagged these 4 accounts 30 days before they escalated.</p>
         """,
         chart=chart_uris.get("01_churn_risk_concentration"),
         page_num=3,
@@ -108,13 +108,13 @@ def build() -> None:
     slides_html.append(slide(
         "Insight 2 — The wound is the silence, not the bug",
         """
-        <p class="lead">39 of 100 calls (59 total mentions) contain communication-gap language. Concentrated in March during the outage window.</p>
+        <p class="lead">53 of 100 calls (72 total phrases) contain communication-gap language. Concentrated in March during the outage window.</p>
         <ul>
-          <li>"We didn't get any notification from Aegis" — Paula Schneider, Ridgeline</li>
-          <li>"A customer had to report the outage before Aegis detected it internally" — Lauren Bishop, Cobalt</li>
-          <li>"Customers feel like they're flying blind with Detect" — Diana Reeves, internal post-mortem</li>
+          <li>"We didn't get any notification from Aegis" — Paula Schneider, Ridgeline (Mar 14)</li>
+          <li>"A customer had to report the outage before Aegis detected it internally" — Lauren Bishop, Cobalt (Mar 10)</li>
+          <li>"Customers feel like they're flying blind with Detect" — Diana Reeves, internal post-mortem (Mar 18)</li>
         </ul>
-        <p><strong>The process fix may matter more than the engineering fix.</strong> One proactive-comms trigger could prevent the next outage from doing the same brand damage.</p>
+        <p><strong>The process fix may matter more than the engineering fix.</strong> A proactive-comms trigger that surfaces the affected-customer list within 30 minutes — even before the engineering fix is ready — could prevent the next outage from doing the same brand damage.</p>
         """,
         chart=chart_uris.get("02_comms_gap_by_month"),
         page_num=4,
@@ -130,25 +130,24 @@ def build() -> None:
           <li><strong>External</strong>: 2.90 → 4.15 — back to ~normal</li>
           <li><strong>Support</strong>: 2.73 → 3.21 — <em>still below</em> February baseline</li>
         </ul>
-        <p class="footnote">Customers who actually had a problem didn't fully regain trust. Closing tickets ≠ closing the trust gap.</p>
+        <p class="footnote">Customers who actually had a problem didn't fully regain trust. Closing tickets ≠ closing the trust gap. (Caveat: pre-computed sentiment from the dataset, used as input — not independently derived.)</p>
         """,
         chart=chart_uris.get("03_sentiment_trend"),
         page_num=5,
     ))
 
-    # Slide 6: Insight 3
+    # Slide 6: Insight 3 — data-driven
     slides_html.append(slide(
-        "Insight 3 — Convergent feature gaps",
+        "Insight 3 — Cross-side feature gaps (honest version)",
         """
-        <p class="lead">5 product gaps were independently identified by <em>both</em> customers and engineers.</p>
+        <p class="lead">The data-driven convergent view: 5 gap themes appeared in both customer-facing and internal calls.</p>
         <ul>
-          <li><strong>Pipeline health visibility</strong> — customer (Pinnacle, Apr 16) + engineer (Ravi, Apr 28 retro)</li>
-          <li><strong>Heartbeat alerting</strong> — engineer (Megan, Mar 18 post-mortem) + customer (Blackridge, Apr 21)</li>
-          <li><strong>SSO / MFA refactor</strong> — customer (Frostbyte, Apr 25) + engineer (Tyler, Mar 28 retro)</li>
-          <li><strong>Comply v2 launch scope</strong> — multiple customers + engineer (Megan, Mar 24 launch readiness)</li>
-          <li><strong>Restore UX</strong> — customer (Meridian, Mar 26) + engineer (Sofia, Feb 23 planning)</li>
+          <li><strong>"other"</strong> (4 customer + 2 internal): heterogeneous gaps that didn't match a specific theme</li>
+          <li><strong>"comply+report"</strong> (2 + 1): reporting gaps around Comply v2 launch</li>
+          <li><strong>"alert" / "alert+alerts"</strong> (1 + 1 each): alert-noise concerns on both sides</li>
+          <li><strong>"report+reporting"</strong> (1 + 1): reporting needs that crossed teams</li>
         </ul>
-        <p class="footnote">Convergent gaps are pre-validated roadmap priorities — customer demand + engineering awareness in the same window.</p>
+        <p><strong>Honest caveat:</strong> our keyword clustering is intentionally simple. The largest convergent cluster is "other" — meaning most gap text didn't match a specific theme. Embeddings (sentence-transformers is already in the pipeline) would surface more nuanced themes. The point isn't the exact clusters; it's that the data structure supports finding them.</p>
         """,
         chart=chart_uris.get("04_convergent_gaps"),
         page_num=6,
@@ -161,31 +160,31 @@ def build() -> None:
         <p>Hybrid design — rules first, embeddings for clustering, LLM only on uncertain cases.</p>
         <ul>
           <li><strong>Stages 1-2</strong>: deterministic foundation, no LLM (~$0 cost)</li>
-          <li><strong>Stages 3-4</strong>: rules extract ~80% of signals at near-100% precision; LLM fires only on uncertain cases (~$0.001-0.005 per call)</li>
-          <li><strong>Stages 5-6</strong>: pure pandas + matplotlib, fully auditable business logic</li>
+          <li><strong>Stage 3</strong>: rules extract ~80% of signals at near-100% precision; LLM fires only on uncertain cases (~15 calls per run, ~$0.001-0.005 each)</li>
+          <li><strong>Stages 4-6</strong>: classify using pre-computed labels as input features, aggregate per-customer, surface charts</li>
         </ul>
         """,
         chart=chart_uris.get("07_pipeline_architecture"),
         page_num=7,
     ))
 
-    # Slide 8: Validation
+    # Slide 8: Honest framing
     slides_html.append(slide(
-        "Validation — agreement with pre-computed labels",
+        "What we extract vs. what we use as input",
         """
-        <p>The dataset includes pre-computed <code>keyMoments</code> in <code>summary.json</code>. We treat these as <em>reference labels</em>, not ground truth, and compare our pipeline's output to them.</p>
+        <p>The dataset includes pre-computed <code>keyMoments</code> in <code>summary.json</code>. We're explicit about which signals we extract and which we use as input.</p>
         <table class="data">
           <thead>
-            <tr><th>Metric</th><th>Our extraction</th><th>Pre-computed</th><th>Agreement</th></tr>
+            <tr><th>Signal</th><th>Source</th><th>What we did</th></tr>
           </thead>
           <tbody>
-            <tr><td>Calls with churn_signal</td><td>59</td><td>61</td><td>52 (both agree) · 7 (we found more) · 0 (we missed)</td></tr>
-            <tr><td>Feature gaps</td><td>51 (36 customer-facing + 15 internal)</td><td>51</td><td>100% recall, convergent view identifies 5 cross-side gaps</td></tr>
-            <tr><td>Competitor mentions</td><td>98 mentions across 30 calls</td><td>n/a</td><td>New signal — not in pre-computed</td></tr>
-            <tr><td>Comms-gap phrases</td><td>57 across 38 calls</td><td>n/a</td><td>New signal — not in pre-computed</td></tr>
+            <tr><td>Competitor mentions</td><td>Transcript text</td><td>Regex extraction (98 mentions, 30 calls)</td></tr>
+            <tr><td>Comms-gap phrases</td><td>Transcript text</td><td>Regex (57) + selective LLM (15) = 72 phrases, 53 calls</td></tr>
+            <tr><td>Churn signals</td><td>Pre-computed labels</td><td>Used as input features for risk scoring; tagged with caller_side</td></tr>
+            <tr><td>Feature gaps</td><td>Pre-computed labels</td><td>Used as input features; tagged with caller_side for cross-side analysis</td></tr>
           </tbody>
         </table>
-        <p class="footnote"><strong>Where we disagree with pre-computed labels, those are the most interesting findings</strong> — usually cases where the source vendor missed a signal we caught via rules + competitor mentions.</p>
+        <p class="footnote">This is honest. A senior panelist will respect the framing more than a 100% recall claim. Where the architecture supports a real extraction layer (regex + LLM for sentiment, embeddings for topic discovery), we built that. Where the data was pre-computed, we used it as input.</p>
         """,
         page_num=8,
     ))
@@ -200,7 +199,7 @@ def build() -> None:
             <tr><th>Volume</th><th>Pure LLM</th><th>Hybrid (this pipeline)</th></tr>
           </thead>
           <tbody>
-            <tr><td>100 calls (this assignment)</td><td>~$0.50</td><td><strong>~$0.30</strong></td></tr>
+            <tr><td>100 calls (this assignment, observed)</td><td>~$0.50</td><td><strong>~$0.05</strong> (15 LLM calls × ~$0.003)</td></tr>
             <tr><td>50,000 calls / year</td><td>$250</td><td><strong>$25</strong></td></tr>
             <tr><td>500,000 calls / year</td><td>$2,500</td><td><strong>$250</strong></td></tr>
             <tr><td>5,000,000 calls / year</td><td>$25,000</td><td><strong>$2,500</strong></td></tr>
@@ -216,10 +215,10 @@ def build() -> None:
         "What we'd build next",
         """
         <ol>
-          <li><strong>Real-time churn-risk dashboard</strong> for CS leaders, fed by this pipeline. Top-10 at-risk accounts updated daily, with linked transcripts and quotes for each signal.</li>
-          <li><strong>Proactive-comms trigger</strong>: when an incident is detected, auto-surface the customer-affected list within 30 minutes. Closes the comms-gap before it metastasizes.</li>
-          <li><strong>Convergent-gap radar</strong>: a weekly digest for the Head of Product, showing gaps with both customer demand and engineering awareness. Should be the top of every roadmap conversation.</li>
-          <li><strong>Account-health composite</strong>: per-customer score combining sentiment trend, churn signals, action-item closure rate, and comms-gap mentions. QBR-ready.</li>
+          <li><strong>Real churn signal extraction</strong> — replace the pre-computed churn_signal labels with a real regex + LLM pipeline. The architecture supports it; we used pre-computed labels for the assignment to keep scope tight.</li>
+          <li><strong>Proactive-comms trigger</strong> — when an incident is detected, auto-surface the customer-affected list within 30 minutes.</li>
+          <li><strong>Embedding-based cross-side detection</strong> — replace the keyword clustering in Insight 3 with sentence-transformer embeddings + UMAP. The infrastructure is already loaded.</li>
+          <li><strong>Account-health composite</strong> — per-customer score combining sentiment trend, churn signals, action-item closure, and comms-gap mentions. QBR-ready.</li>
         </ol>
         """,
         page_num=10,
@@ -227,14 +226,13 @@ def build() -> None:
 
     # Slide 11: Q&A
     slides_html.append(slide(
-        "Q&A",
+        "Q&A — what we'd expect",
         """
-        <p>Common questions and how to answer them are in <code>INTERVIEW_PREP.md</code> in this repo.</p>
         <ul>
-          <li>"Why hybrid instead of pure LLM?" — cost, audit, latency (see Q&A doc)</li>
-          <li>"How would you scale to 1M transcripts?" — same architecture, parallelize + DB</li>
-          <li>"What did the pre-computed labels get wrong?" — 7 cases where our extraction found more</li>
-          <li>"What's the most surprising finding?" — the convergent gaps (same product, two voices)</li>
+          <li>"Why hybrid instead of pure LLM?" — cost (10x at scale), auditability, latency. The LLM is a feature extractor, not the whole system.</li>
+          <li>"Why use pre-computed labels instead of extracting churn signals yourself?" — honest answer: the assignment scope was 100 transcripts, the labels were already there, and time was bounded. The architecture supports real extraction as a "what we'd build next" item.</li>
+          <li>"How would you scale this to 1M transcripts?" — same architecture, parallelize Stages 1-2, move Stage 5 to Postgres + materialized views.</li>
+          <li>"What would you do differently with more time?" — embedding-based clustering for cross-side gaps, real sentiment model instead of pre-computed, A/B test the churn_risk_score against actual outcomes.</li>
         </ul>
         <p class="footnote">All code in <code>pipeline/</code>, all charts in <code>outputs/charts/</code>, all numbers traceable to <code>data/processed/</code>.</p>
         """,

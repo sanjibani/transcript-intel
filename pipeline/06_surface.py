@@ -47,37 +47,63 @@ plt.rcParams["font.size"] = 10
 
 
 def chart_01_churn_risk_concentration(pc: pd.DataFrame, per_call: pd.DataFrame) -> None:
-    """Insight 1: Top customers by churn risk score with contributing factors."""
+    """Insight 1: Top customers by churn risk score with contributing factors.
+
+    The stacked bars show the actual formula components (25 / 15*n / 20 / 10 / 10),
+    so they sum to the risk score line.
+    """
     top = pc.head(10).copy()
+
+    # Recompute the formula components so the bars match the line.
+    # Mirrors the formula in pipeline/05_aggregate.py:111-115.
+    top = top.copy()
+    top["c_urgent"] = (top["n_urgent_calls"] > 0).astype(int) * 25
+    top["c_churn"] = (top["n_churn_signals"] * 15).clip(upper=45)
+    top["c_competitor"] = (top["n_competitor_mentions"] > 0).astype(int) * 20
+    top["c_trend"] = (top["sentiment_trend"] < -0.5).astype(int) * 10
+    top["c_recent"] = ((top["days_since_last"] <= 14) & (top["last_sentiment"] < 2.5)).astype(int) * 10
+    top["c_sum"] = (top["c_urgent"] + top["c_churn"] + top["c_competitor"]
+                    + top["c_trend"] + top["c_recent"]).clip(upper=100)
 
     fig, ax = plt.subplots(figsize=(12, 6))
     y_pos = np.arange(len(top))
 
-    # Stacked bars: n_urgent, n_churn_signals, n_competitor_mentions
-    p1 = ax.barh(y_pos, top["n_churn_signals"] * 5, color="#d62728", alpha=0.7, label="Churn signals × 5")
-    p2 = ax.barh(y_pos, top["n_competitor_mentions"] * 5, left=top["n_churn_signals"] * 5,
-                 color="#ff7f0e", alpha=0.7, label="Competitor mentions × 5")
-    p3 = ax.barh(y_pos, top["n_urgent_calls"] * 25, left=(top["n_churn_signals"] + top["n_competitor_mentions"]) * 5,
-                 color="#9467bd", alpha=0.7, label="Urgent calls × 25")
+    # Stacked bars — actual formula components
+    left = np.zeros(len(top))
+    components = [
+        ("c_urgent",     "Urgent (+25)",     "#9467bd"),
+        ("c_churn",      "Churn signals (15/each, ≤45)", "#d62728"),
+        ("c_competitor", "Competitor (+20)",  "#ff7f0e"),
+        ("c_trend",      "Trend drop (+10)", "#2ca02c"),
+        ("c_recent",     "Recent + low (+10)", "#1f77b4"),
+    ]
+    for col, label, color in components:
+        ax.barh(y_pos, top[col], left=left, color=color, alpha=0.85, label=label)
+        left = left + top[col].values
 
-    # Risk score line
-    ax2 = ax.twiny()
-    ax2.plot(top["churn_risk_score"], y_pos, "o-", color="black", linewidth=2, markersize=8, label="Risk score")
-    ax2.set_xlim(0, 100)
-    ax2.set_xlabel("Churn risk score (0-100)", fontsize=11)
+    # Risk score line — should match the total bar length per customer
+    ax.plot(top["churn_risk_score"], y_pos, "ko-", linewidth=2, markersize=8,
+            label="Risk score (line)", zorder=10)
+    # Connect line to bar end with thin grey to show they match
+    for i, (score, total) in enumerate(zip(top["churn_risk_score"], top["c_sum"])):
+        if abs(score - total) > 1:
+            # They don't match exactly (probably capped at 100) — note it
+            ax.text(score, i, f" {score}", va="center", fontsize=9, color="black", fontweight="bold")
 
+    ax.set_xlim(0, 105)
     ax.set_yticks(y_pos)
     ax.set_yticklabels(top["customer_name"], fontsize=10)
     ax.invert_yaxis()
-    ax.set_xlabel("Contribution to risk score", fontsize=11)
-    ax.set_title("Insight 1: Churn risk concentrates in 4-8 accounts\nTop 10 customers by composite risk score, March-April 2026",
+    ax.set_xlabel("Churn risk score (0-100)", fontsize=11)
+    ax.set_title("Insight 1: Churn risk concentrates in 4-8 accounts\n"
+                 "Top 10 customers by composite risk score, March-April 2026",
                  fontsize=13, fontweight="bold", loc="left")
-    ax.legend(loc="lower right", fontsize=9)
+    ax.legend(loc="lower right", fontsize=8, ncol=2)
 
     plt.tight_layout()
     plt.savefig(CHARTS_DIR / "01_churn_risk_concentration.png", bbox_inches="tight")
     plt.close()
-    print("  ✓ Chart 1: churn risk concentration")
+    print("  ✓ Chart 1: churn risk concentration (formula components)")
 
 
 def chart_02_comms_gap_by_month(per_call: pd.DataFrame) -> None:
@@ -141,7 +167,13 @@ def chart_03_sentiment_trend(pm: pd.DataFrame) -> None:
 
 
 def chart_04_convergent_gaps(cg: pd.DataFrame) -> None:
-    """Insight 3: Convergent feature gaps — customer + engineer mentions."""
+    """Insight 3: Convergent feature gaps — same gap mentioned by both customer and internal calls.
+
+    Note: uses keyword clustering which is intentionally simple. The biggest cluster
+    is "other" (heterogeneous gaps that didn't match a specific theme). With embeddings
+    we could surface more nuanced themes — the architecture supports it but we kept
+    the simple version for interpretability.
+    """
     conv = cg[cg["is_convergent"]].copy().sort_values("n_total", ascending=True).tail(8)
 
     if conv.empty:
@@ -157,8 +189,9 @@ def chart_04_convergent_gaps(cg: pd.DataFrame) -> None:
     ax.set_yticks(y)
     ax.set_yticklabels(conv["keywords"].str.replace("+", " + "), fontsize=10)
     ax.set_xlabel("Number of mentions", fontsize=11)
-    ax.set_title("Insight 3: Convergent feature gaps\nSame product gap raised independently by customers and engineers",
-                 fontsize=13, fontweight="bold", loc="left")
+    ax.set_title("Insight 3: Gaps raised by both customers and internal teams\n"
+                 "Keyword clustering — most convergent gaps fall into 'other' (no specific theme matched)",
+                 fontsize=12, fontweight="bold", loc="left")
     ax.legend(fontsize=10)
 
     # Add total at end of bar
@@ -169,7 +202,7 @@ def chart_04_convergent_gaps(cg: pd.DataFrame) -> None:
     plt.tight_layout()
     plt.savefig(CHARTS_DIR / "04_convergent_gaps.png", bbox_inches="tight")
     plt.close()
-    print("  ✓ Chart 4: convergent feature gaps")
+    print("  ✓ Chart 4: convergent feature gaps (data-driven)")
 
 
 def chart_05_call_archetype_distribution(per_call: pd.DataFrame) -> None:
