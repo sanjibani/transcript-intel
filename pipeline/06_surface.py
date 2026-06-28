@@ -9,16 +9,34 @@ Input:
     data/processed/05_aggregated/
 
 Output:
-    outputs/charts/*.png
-    outputs/tables/*.csv
+    outputs/charts/*.png    (7 PNG charts)
+    outputs/tables/*.csv    (3 CSV tables)
 
 Design decisions (for interview prep):
-    - matplotlib + seaborn for static charts (presentation-ready)
-    - Each chart has a clear single-message title
-    - We generate 7 charts covering the 3 insights + supporting visuals
-    - Tables saved as CSV for the slide-deck appendix
+    - matplotlib + seaborn for static charts (presentation-ready, no JS deps)
+    - Each chart has a clear single-message title so it stands alone
+    - Chart 1 stacks the formula components (25/15n/20/10/10) so the bars
+      literally sum to the risk-score line. No "trust me, the math works."
+    - Convergent gaps chart is data-driven (theme x call_type cross-tab),
+      not hand-curated. Honest "other is largest" caveat is in the title.
+    - Pipeline architecture diagram is generated from code, not hand-drawn,
+      so it can't drift from the actual stages.
 
-Cost: $0
+Charts produced (in order):
+    1. 01_churn_risk_concentration.png — top 10 customers, formula components stacked
+    2. 02_comms_gap_by_month.png       — comms-gap phrase counts over time
+    3. 03_sentiment_trend.png          — avg sentiment by call_type per month
+    4. 04_convergent_gaps.png          — feature gaps that crossed customer/internal
+    5. 05_call_archetype_distribution.png — mix of call archetypes in the dataset
+    6. 06_competitor_mentions.png      — competitor mentions per customer
+    7. 07_pipeline_architecture.png    — the 6 stages as a flowchart
+
+Tables produced:
+    - per_customer_risk.csv   — every customer with score + components
+    - convergent_gaps.csv     — every gap theme x call_type matrix
+    - monthly_summary.csv     — per-month call counts and signal totals
+
+Cost: $0 (pure code, no LLM)
 """
 
 from __future__ import annotations

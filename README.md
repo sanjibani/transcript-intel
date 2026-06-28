@@ -10,6 +10,14 @@ A hybrid pipeline that processes 100 call transcripts and surfaces three insight
 
 3. **Convergent feature gaps** — 5 product gaps were independently identified by customers AND engineers within weeks of each other. The strongest: pipeline-health visibility (mentioned by Pinnacle customer on Apr 16 and by Detect team on Apr 28 retro).
 
+## How to read this repo
+
+If you have 3 minutes: read **[PLAN.md](PLAN.md)** at the repo root. It's the tour map — what each file does, where to find the key formulas, what's in scope and what isn't.
+
+If you have 10 minutes: PLAN.md, then [`docs/architecture.md`](docs/architecture.md) for the stage-by-stage spec, then skim the module docstrings at the top of each `pipeline/*.py` file. The first ~30 lines of each script explains what it does, why the technique was chosen, and what it costs.
+
+If you want to run it: `bash scripts/run_all.sh` from the project root.
+
 ## Pipeline architecture
 
 ```

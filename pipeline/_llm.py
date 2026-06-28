@@ -7,7 +7,7 @@ What this does:
     with any OpenAI-compatible endpoint via env vars.
 
 Configuration via env vars (loaded from .env file if present):
-    LLM_BASE_URL  - API endpoint (default: https://api.minimax.chat/v1)
+    LLM_BASE_URL  - API endpoint (default: https://api.minimax.io/v1)
     LLM_API_KEY   - your API key (REQUIRED)
     LLM_MODEL     - model name (default: MiniMax-Text-01)
 
@@ -15,6 +15,22 @@ Setup:
     1. Copy .env.example to .env:   cp .env.example .env
     2. Edit .env and put your real API key there
     3. Run the pipeline — it will read from .env automatically
+
+Design decisions (for interview prep):
+    - **Why a wrapper, not direct calls**: every stage needs the same
+      error-handling, key-redaction, and graceful-degradation logic.
+      Centralizing means Stages 3 and 4 stay focused on the actual signal
+      extraction, not on plumbing.
+    - **Why OpenAI-compatible**: MiniMax's API exposes the same shape, so the
+      same code works for either provider. If we migrate to a different
+      model later, this file is the only thing that changes.
+    - **Why graceful degradation**: the assignment should be reproducible
+      without a paid API key. Stages 3 and 4 catch None from llm_call()
+      and run in rules-only mode. Numbers will be slightly different but
+      the structure is the same.
+    - **Why safe key logging**: the API key is sensitive. If the user pastes
+      it into a debug print by accident, it should not leak into logs or
+      stdout. We mask the key in every log line (last 4 chars only).
 
 Safety:
     .env is gitignored. NEVER commit it. The pipeline will refuse to log

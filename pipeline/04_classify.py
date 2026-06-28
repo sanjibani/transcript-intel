@@ -42,6 +42,10 @@ import pandas as pd
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------------
+
 INPUT_FILE = Path(__file__).resolve().parent.parent / "data" / "processed" / "03_extracted.parquet"
 OUTPUT_FILE = Path(__file__).resolve().parent.parent / "data" / "processed" / "04_classified.parquet"
 
@@ -58,6 +62,10 @@ def _safe_list(value) -> list:
     except TypeError:
         return []
 
+
+# ---------------------------------------------------------------------------
+# Per-call classifier
+# ---------------------------------------------------------------------------
 
 def classify_churn_signals(row: pd.Series) -> list[dict]:
     """Return all churn signals for this call, tagged with source.
@@ -178,6 +186,10 @@ def derive_call_archetype(row: pd.Series) -> str:
 
     return "general_internal"
 
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
 
 def main() -> int:
     if not INPUT_FILE.exists():
