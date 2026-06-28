@@ -12,11 +12,10 @@ A hybrid pipeline that processes 100 call transcripts and surfaces three insight
 
 ## How to read this repo
 
-If you have 3 minutes: read **[PLAN.md](PLAN.md)** at the repo root. It's the tour map — what each file does, where to find the key formulas, what's in scope and what isn't.
-
-If you have 10 minutes: PLAN.md, then [`docs/architecture.md`](docs/architecture.md) for the stage-by-stage spec, then skim the module docstrings at the top of each `pipeline/*.py` file. The first ~30 lines of each script explains what it does, why the technique was chosen, and what it costs.
-
-If you want to run it: `bash scripts/run_all.sh` from the project root.
+- **3 min:** This README. Covers the three insights, the architecture, the cost story.
+- **10 min:** Add [`docs/architecture.md`](docs/architecture.md) for the stage-by-stage spec.
+- **Full read:** Each `pipeline/*.py` opens with a module docstring that explains what it does, why the technique was chosen, and what it costs.
+- **Run it:** `bash scripts/run_all.sh` from the project root.
 
 ## Pipeline architecture
 
