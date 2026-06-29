@@ -19,7 +19,7 @@ Output:
     data/processed/01_parsed.parquet
         One row per call with all the metadata needed by Stage 2.
 
-Design decisions (for interview prep):
+Design decisions:
     - Pure code, no LLM, no embeddings. The foundation must be deterministic.
     - We extract BOTH the raw metadata AND a snapshot of the pre-computed
       labels from summary.json. We treat those as reference labels to

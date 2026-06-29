@@ -16,7 +16,7 @@ Setup:
     2. Edit .env and put your real API key there
     3. Run the pipeline — it will read from .env automatically
 
-Design decisions (for interview prep):
+Design decisions:
     - **Why a wrapper, not direct calls**: every stage needs the same
       error-handling, key-redaction, and graceful-degradation logic.
       Centralizing means Stages 3 and 4 stay focused on the actual signal

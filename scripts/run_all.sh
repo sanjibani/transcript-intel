@@ -33,9 +33,16 @@ echo "[6/6] Surface — charts and tables..."
 python3 pipeline/06_surface.py 2>&1 | grep -E "^(✓|  )" | tail -10
 
 echo ""
+echo "[7/7] Build slide deck (HTML + PDF)..."
+python3 scripts/build_slide_deck.py
+python3 scripts/html_to_pdf.py
+
+echo ""
 echo "============================================================"
 echo "  Done. Outputs:"
-echo "    data/processed/   — intermediate stage outputs"
-echo "    outputs/charts/   — 7 PNG charts"
-echo "    outputs/tables/   — 3 CSV tables"
+echo "    data/processed/    — intermediate stage outputs"
+echo "    outputs/charts/    — 7 PNG charts"
+echo "    outputs/tables/    — 3 CSV tables"
+echo "    outputs/slide_deck.html  — slide deck (interactive)"
+echo "    outputs/slide_deck.pdf   — slide deck (PDF)"
 echo "============================================================"

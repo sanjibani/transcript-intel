@@ -16,7 +16,7 @@ Output:
     data/processed/03_extracted.parquet
         All Stage 2 columns + extraction columns.
 
-Design decisions (for interview prep):
+Design decisions:
     - Competitor mentions: pure rules. The list is known (SentinelShield,
       CyberNova, VaultEdge). Regex with negation check.
     - Comms-gap phrases: regex first (~80% recall), LLM only on uncertain

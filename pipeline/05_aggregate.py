@@ -16,7 +16,7 @@ Output:
         convergent_gaps.parquet   — feature gaps clustered by call-side
         per_call_pivot.parquet    — full call-level table for ad-hoc queries
 
-Design decisions (for interview prep):
+Design decisions:
     - churn_risk_score is a weighted sum of: urgent call count, churn signal
       count, competitor mentions, sentiment trend, recent negative interaction.
       All terms are 0-25, capped at 100. Easy to defend in Q&A.

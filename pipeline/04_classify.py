@@ -16,7 +16,7 @@ Output:
         Stage 3 columns + per-call churn_signals[], feature_gaps[], and
         call_archetype.
 
-Design decisions (for interview prep):
+Design decisions:
     - We treat pre-computed keyMoments as REFERENCE LABELS, not ground truth.
       We extract our own signals (Stage 3 + rule-based here) and compare.
     - churn_signals: union of (a) pre-computed churn_signal key moments,

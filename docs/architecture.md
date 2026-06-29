@@ -8,7 +8,6 @@ A hybrid pipeline gives us:
 - **Cost**: 10x cheaper than pure LLM at scale
 - **Auditability**: every signal traceable to a rule or quote
 - **Reproducibility**: deterministic for non-LLM stages
-- **Latency**: <1s for 90% of calls
 - **Cost-control discipline**: LLM only fires when rules miss
 
 ## The 6 stages
@@ -82,7 +81,7 @@ The dataset includes pre-computed `keyMoments` in `summary.json`. We treat these
 - **Where we find MORE than pre-computed**: that's a signal the source vendor missed
 - **Where pre-computed finds MORE than we do**: that's a label we should investigate
 
-Currently: 100% recall on churn signals + 14% precision uplift + 2 new signal classes (competitor mentions, comms-gap) the source vendor didn't tag.
+Currently: matches pre-computed churn signals on all 52 calls where both exist; additionally catches 7 calls the pre-computed missed. We also surface 2 signal classes (competitor mentions, comms-gap) the pre-computed labels don't tag at all.
 
 ## What I'd build differently in production
 

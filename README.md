@@ -6,7 +6,7 @@ A hybrid pipeline that processes 100 call transcripts and surfaces three insight
 
 1. **Churn risk concentration** — 4-8 accounts absorb most churn risk after the March 2026 Detect Outage. 14 customers scored HIGH risk; top 4 (Blackridge, Cobalt, Northstar, Helix) all score 90/100 on the composite risk formula.
 
-2. **Communication gap** — 39 of 100 calls contain "no notification" / "flying blind" language from Aegis's silence during outages. Concentrated in March 11-12 (peak outage window).
+2. **Communication gap** — 38 of 100 calls contain "no notification" / "flying blind" language from Aegis's silence during outages. Concentrated in March 11-12 (peak outage window). With LLM validation enabled, this climbs to ~53 calls (72 phrases); the slide deck shows the LLM-on numbers.
 
 3. **Convergent feature gaps** — 5 product gaps were independently identified by customers AND engineers within weeks of each other. The strongest: pipeline-health visibility (mentioned by Pinnacle customer on Apr 16 and by Detect team on Apr 28 retro).
 
@@ -100,7 +100,7 @@ transcript-intel/
 │   ├── tables/                # 3 CSV tables (gitignored)
 │   └── slide_deck.html        # Self-contained HTML slide deck
 ├── README.md
-├── INTERVIEW_PREP.md          # (gitignored — kept locally, not in repo)
+├── INTERVIEW_PREP.md          # (gitignored)
 └── requirements.txt
 ```
 
@@ -113,7 +113,7 @@ transcript-intel/
 | 500,000 / year | $2,500 | $250 |
 | 5,000,000 / year | $25,000 | $2,500 |
 
-Plus: full audit trail for every signal, deterministic outputs for non-LLM stages, <1s latency for 90% of calls.
+Plus: full audit trail for every signal, deterministic outputs for non-LLM stages, and predictable cost at scale.
 
 ## LLM configuration
 

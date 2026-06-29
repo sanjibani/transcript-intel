@@ -14,7 +14,7 @@ Output:
     data/processed/02_enriched.parquet
         Same as Stage 1, plus the columns listed above.
 
-Design decisions (for interview prep):
+Design decisions:
     - All rules, no LLM. This stage must be deterministic and fast.
     - call_type from title prefix — we tested this on all 100 calls and
       it matches the human-eyeball classification 100% of the time.

@@ -12,7 +12,7 @@ Output:
     outputs/charts/*.png    (7 PNG charts)
     outputs/tables/*.csv    (3 CSV tables)
 
-Design decisions (for interview prep):
+Design decisions:
     - matplotlib + seaborn for static charts (presentation-ready, no JS deps)
     - Each chart has a clear single-message title so it stands alone
     - Chart 1 stacks the formula components (25/15n/20/10/10) so the bars
