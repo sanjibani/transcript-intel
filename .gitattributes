@@ -1,2 +1,2 @@
-# git-crypt config — INTERVIEW_PREP.md is encrypted for the user's eyes only
-INTERVIEW_PREP.md filter=git-crypt diff=git-crypt merge=git-crypt
+# git-crypt is no longer in use. Personal notes are gitignored instead.
+# See .gitignore for INTERVIEW_PREP.md, SUBMISSION.md, LOCAL_SETUP.md.

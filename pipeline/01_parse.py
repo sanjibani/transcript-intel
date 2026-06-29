@@ -7,7 +7,7 @@ What this does:
     and produces a single DataFrame with one row per call.
 
 Input:
-    /Users/sabyasachichoudhary/Downloads/interview-assignment/dataset/<call_id>/
+    $DATASET_ROOT/<call_id>/
         ├── events.json
         ├── meeting-info.json
         ├── speaker-meta.json
@@ -35,6 +35,7 @@ Cost: $0 (pure Python + pandas)
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -44,10 +45,9 @@ import pandas as pd
 # Configuration
 # ---------------------------------------------------------------------------
 
-# Source: the assignment's dataset folder
-DATASET_ROOT = Path(
-    "/Users/sabyasachichoudhary/Downloads/interview-assignment/dataset"
-)
+# Source: the assignment's dataset folder.
+# Set DATASET_ROOT in your .env file or as an environment variable.
+DATASET_ROOT = Path(os.environ.get("DATASET_ROOT", "/path/to/interview-assignment/dataset"))
 
 # Output: where this stage saves its results
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "data" / "processed"

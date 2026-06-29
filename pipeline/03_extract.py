@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 import sys
 from pathlib import Path
@@ -49,7 +50,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 INPUT_FILE = Path(__file__).resolve().parent.parent / "data" / "processed" / "02_enriched.parquet"
-DATASET_ROOT = Path("/Users/sabyasachichoudhary/Downloads/interview-assignment/dataset")
+DATASET_ROOT = Path(os.environ.get("DATASET_ROOT", "/path/to/interview-assignment/dataset"))
 OUTPUT_FILE = Path(__file__).resolve().parent.parent / "data" / "processed" / "03_extracted.parquet"
 
 # Known competitors in the data (from exploration)

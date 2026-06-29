@@ -39,10 +39,14 @@ Stages 1-2 are deterministic. Stages 3-4 use LLM only when rules miss. Stages 5-
 ## Quick start
 
 ```bash
-# Install dependencies
+# 1. Set up your dataset path
+cp .env.example .env
+# Edit .env and set DATASET_ROOT to wherever the dataset folder lives
+
+# 2. Install dependencies
 pip install -r requirements.txt
 
-# Run the full pipeline (~30 seconds)
+# 3. Run the full pipeline (~30 seconds)
 bash scripts/run_all.sh
 
 # Or run stages individually
@@ -96,7 +100,7 @@ transcript-intel/
 │   ├── tables/                # 3 CSV tables (gitignored)
 │   └── slide_deck.html        # Self-contained HTML slide deck
 ├── README.md
-├── INTERVIEW_PREP.md          # Private — encrypted via git-crypt
+├── INTERVIEW_PREP.md          # (gitignored — kept locally, not in repo)
 └── requirements.txt
 ```
 

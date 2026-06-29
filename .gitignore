@@ -45,5 +45,10 @@ outputs/tables/*.csv
 .env.save
 *.pem
 
-# NOTE: INTERVIEW_PREP.md is now encrypted via git-crypt (see .gitattributes).
-# The encrypted version lives in the repo; only your GPG key decrypts it locally.
+# Personal notes — kept locally, never committed
+INTERVIEW_PREP.md
+SUBMISSION.md
+LOCAL_SETUP.md
+
+# git-crypt state (no longer in use)
+.git-crypt/
